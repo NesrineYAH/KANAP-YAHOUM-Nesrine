@@ -73,7 +73,9 @@ fetch("http://localhost:3000/api/products")
 const cartItems = document.getElementById("cart__items");
 let totalQuantity = document.getElementById("totalQuantity");
 let myCart = localStorage.getItem("myCart");
+
 // créer une fonction pour obtenir le tbleau de mon panier
+
 function getmyCart() {
   let myCart = localStorage.getItem("myCart");
   return !myCart ? [] : JSON.parse(myCart);
@@ -109,8 +111,7 @@ for (let item of itemsMyCart) {
                 </div>
               </div>
             </div>
-          </article>
-      `;
+          </article>`;
       cartItems.insertAdjacentHTML("beforeend", cartArticle);
     })
     .catch((err) => console.error(err))
@@ -146,18 +147,31 @@ console.log("Total prix panier", totalPrice);
 UpdatetotalPrice();
 displayTotalPrice();
 
-
-let itemPrice = itemsMyCart.price;
+/*// En supposant que la variable myCart est toujours disponible
+let totalCartPrice = 0 // Initialisation de la variable qui contiendra le prix total du panier
+for (let item of myCart) {
+  fetch(`http://localhost:3000/api/products/${item.id}`)
+    .then(res => res.json())
+    .then(product => {
+      totalCartPrice += item.quantite * product.price
+  }
+}
+*/
 
 // créer une fonctione pour mettre à jours le panier
-function UpdatetotalPrice() {
-  totalPrice = 0;
-  for (let item in myCart) {
-    totalPrice = totalPrice + item.quantite * item.Price;
 
-    document.getElementById("totalPrice").innerText = totalPrice;
+function UpdatetotalPrice() {
+  let totalPrice = 0;
+  for (let item in myCart) {
+    fetch(`http://localhost:3000/api/products/${item.id}`)
+      .then((res) => res.json())
+      .then((item) => {
+        totalPrice = totalPrice + item.quantite * item.Price;
+        document.getElementById("totalPrice").innerText = totalPrice;
+
+        return totalPrice;
+      });
   }
-  return totalPrice;
 }
 console.log("Total prix article", totalPrice);
 
@@ -172,4 +186,40 @@ function displayTotalPrice() {
 }
 
 console.log("afficher le prix total du panier", totalProductPricePanier);
+console.log("typeof totalProductPricePanier");
+
 displayTotalPrice();
+
+/*// Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
+function removeProduct() {
+  // Récupère tous les éléments HTML avec la classe "deleteItem"
+  const deleteItem = document.getElementsByClassName('deleteItem');
+
+  // Pour chaque élément "Supprimer"
+  for (let a = 0; a < deleteItem.length; a++) {
+    // Ajoute un gestionnaire d'événement "click" à l'élément "Supprimer"
+    deleteItem[a].addEventListener('click', (event) => {
+      // Empêche le comportement par défaut (rechargement de la page)
+      event.preventDefault(); 
+   
+            // Enregistre l'ID et la couleur du produit à supprimer
+
+          let deleteId = myCart[a].id;
+      let deleteColor = mycart[a].couleur;
+      
+      // Filtre les  produits à conserver dans le panier et supprime le produit cliqué
+
+      myCart =mycart.filter(
+        (element) => element.id !== deleted || element.color !== deleteColor);
+      
+          // Mettre à jour le LocalStorage avec les produits restants
+      localStorage.setItem('mycart', JSON.stringify(myCart));
+
+         // Affiche un message de confirmation de la suppression du produit
+      alert('Votre article a bien été retiré de votre panier !');
+
+      // Actualise la page du panier
+      window.location.href = 'cart.html';
+    });
+
+        */
