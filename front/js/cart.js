@@ -1,5 +1,5 @@
 //* FETCH | Récupération et Transmission des données de l'API
-
+/*
 function getmyCart() {
   let myCart = localStorage.getItem("myCart");
   // Si mon panier n'est pas vide [...]
@@ -23,27 +23,7 @@ fetch("http://localhost:3000/api/products")
       let couleur = itemsMyCart[i].couleur;
       let quantite = itemsMyCart[i].quantite;
       let item = data.find((p) => id === p._id);
-      /*     <!-- <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-              <div class="cart__item__img">
-                <img src="../images/product01.jpg" alt="Photographie d'un canapé">
-              </div>
-              <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                  <h2>Nom du produit</h2>
-                  <p>Vert</p>
-                  <p>42,00 €</p>
-                </div>
-                <div class="cart__item__content__settings">
-                  <div class="cart__item__content__settings__quantity">
-                    <p>Qté : </p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-                  </div>
-                  <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
-                  </div>
-                </div>
-              </div>
-            </article>-->*/
+     
 
       const article = document.createElement("article");
       document.querySelector("#cart__items").appendChild(article);
@@ -62,8 +42,7 @@ fetch("http://localhost:3000/api/products")
       cardItem.classList.add("cart__item__content");
       cardItem.classList.add("cart__item__img");
       cardItem.classList.add("cart__item");
-      // cardItem.appendChild(article);
-      //cardItem.appendChild(Image);
+  
 
       const description = document.createElement("cardItem");
       description.classList.add("cart__item__content__description");
@@ -87,22 +66,110 @@ fetch("http://localhost:3000/api/products")
       cartArea.appendChild(Image);
       /* cartArea.appendChild(h2);
       cartArea.appendChild(p);
-      cartArea.appendChild(p2);*/
+      cartArea.appendChild(p2);
     }
-  });
+  });*/
 
+const cartItems = document.getElementById("cart__items");
+let totalQuantity = document.getElementById("totalQuantity");
+let myCart = localStorage.getItem("myCart");
+// créer une fonction pour obtenir le tbleau de mon panier
+function getmyCart() {
+  let myCart = localStorage.getItem("myCart");
+  return !myCart ? [] : JSON.parse(myCart);
+}
+
+let itemsMyCart = getmyCart();
+console.log("liste des articles dans mon panier", itemsMyCart);
+
+//* FETCH | Récupération et Transmission des données de l'API
+for (let item of itemsMyCart) {
+  let url = `http://localhost:3000/api/products/${item.id}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      let cartArticle = `
+          <article class="cart__item" data-id="${data.id}" data-color="${item.couleur}">
+            <div class="cart__item__img">
+              <img src="${data.imageUrl}" alt="${data.altTxt}">
+            </div>
+            <div class="cart__item__content">
+              <div class="cart__item__content__description">
+                <h2>${data.name}</h2>
+                <p>${item.couleur}</p>
+                <p>${data.price}€</p>
+                </div>
+              <div class="cart__item__content__settings">
+                <div class="cart__item__content__settings__quantity">
+                  <p>Qté : </p>
+                  <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantite}">
+                </div>
+                <div class="cart__item__content__settings__delete">
+                  <p class="deleteItem">Supprimer</p>
+                </div>
+              </div>
+            </div>
+          </article>
+      `;
+      cartItems.insertAdjacentHTML("beforeend", cartArticle);
+    })
+    .catch((err) => console.error(err))
+    .catch((err) => console.error(err));
+}
+// Afficher la quantité des article dans le panier
+
+let totalArticles = 0;
+for (let item of itemsMyCart) {
+  totalArticles += Number(item.quantite);
+}
+console.log("le nombre total de mon panier:", totalArticles);
+totalQuantity.textContent = totalArticles;
+
+// afficher le prix dans le panier
 /*
-for (let totalQuantite of myCart) {
-  // Boucle sur les produits de l'API
-  for (let i = 0; i < myCart.length; i++) {
-    // Si id produit PANIER = id produit API
-    if (canapeSelectione.id === products[a]._id) {
-      // Récupération des informations manquantes
-      canapeSelectione.name = products[a].name;
-      canapeSelectione.price = products[a].price;
-      canapeSelectione.imageUrl = products[a].imageUrl;
-      canapeSelectione.altTxt = products[a].altTxt;
-      canapeSelectione.description = products[a].description;
-    }
+let itemPrice = itemsMyCart.price;
+let totalPrice = totalArticles * itemPrice;
+totalPrice = 0;
+
+// En supposant que la  itemMyCart est toujours disponible
+for (let a = 0; a < itemsMyCart.lentgh; a++) {
+  totalPrice = totalArticles * itemPrice;
+  totalPrice.textContent = parseInt(totalPrice);
+  totalPrice += Number(totalPrice);
+}
+console.log("le prix total d'un article", totalPrice);
+
+let totalProductPricePanier = [];
+totalProductPricePanier += parseInt(totalPrice);
+console.log("Total prix panier", totalPrice);
+*/
+UpdatetotalPrice();
+displayTotalPrice();
+
+
+let itemPrice = itemsMyCart.price;
+
+// créer une fonctione pour mettre à jours le panier
+function UpdatetotalPrice() {
+  totalPrice = 0;
+  for (let item in myCart) {
+    totalPrice = totalPrice + item.quantite * item.Price;
+
+    document.getElementById("totalPrice").innerText = totalPrice;
   }
-}*/
+  return totalPrice;
+}
+console.log("Total prix article", totalPrice);
+
+// Affichage du montant total du panier
+
+let totalProductPricePanier = 0;
+
+function displayTotalPrice() {
+  let totalProductPricePanier = document.getElementById("totalPrice");
+  totalProductPricePanier.innerHTML += UpdatetotalPrice();
+  totalProductPricePanier == parseInt(Number(totalPrice));
+}
+
+console.log("afficher le prix total du panier", totalProductPricePanier);
+displayTotalPrice();

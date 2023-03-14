@@ -117,13 +117,3 @@ function addProductLocalStorage(canapeSelectione) {
     localStorage.setItem("myCart", JSON.stringify(myCart));
   }
 }
-
-/*
-if (
-  window.confirm(`${articleAjoute.name} option: ${articleAjoute.color} a bien été ajouté au panier !
-        Consuler le Panier [OK] | Rester à ${articleAjoute.name} [Annuler]`)
-) {
-  window.location.href = "cart.html";
-} else {
-  window.close;
-}*/
