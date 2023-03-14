@@ -70,9 +70,12 @@ fetch("http://localhost:3000/api/products")
     }
   });*/
 
+
+
 const cartItems = document.getElementById("cart__items");
 let totalQuantity = document.getElementById("totalQuantity");
 let myCart = localStorage.getItem("myCart");
+let totalPrice = document.getElementById("totalPrice");
 
 // créer une fonction pour obtenir le tbleau de mon panier
 
@@ -161,22 +164,24 @@ for (let item of myCart) {
 // créer une fonctione pour mettre à jours le panier
 
 function UpdatetotalPrice() {
-  let totalPrice = 0;
-  for (let item in myCart) {
+  // on donne une valeur initial à totalPrice
+  let totalPriceCart = 0;
+
+  for (let item in itemsMyCart) {
     fetch(`http://localhost:3000/api/products/${item.id}`)
       .then((res) => res.json())
-      .then((item) => {
-        totalPrice = totalPrice + item.quantite * item.Price;
-        document.getElementById("totalPrice").innerText = totalPrice;
-
-        return totalPrice;
+      .then((data) => {
+        totalPriceCart += item.quantite * data.price;
+        totalPrice.textContent = totalPriceCart;
+        // document.getElementById("totalPrice").innerText = Number(totalPrice);
       });
   }
 }
 console.log("Total prix article", totalPrice);
+UpdatetotalPrice();
 
 // Affichage du montant total du panier
-
+/*
 let totalProductPricePanier = 0;
 
 function displayTotalPrice() {
@@ -187,39 +192,44 @@ function displayTotalPrice() {
 
 console.log("afficher le prix total du panier", totalProductPricePanier);
 console.log("typeof totalProductPricePanier");
+*/
+UpdatetotalPrice();
+//displayTotalPrice();
+removeProduct();
 
-displayTotalPrice();
 
-/*// Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
+// Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
+
 function removeProduct() {
   // Récupère tous les éléments HTML avec la classe "deleteItem"
-  const deleteItem = document.getElementsByClassName('deleteItem');
+  const deleteItem = document.querySelector(".deleteItem");
 
   // Pour chaque élément "Supprimer"
   for (let a = 0; a < deleteItem.length; a++) {
     // Ajoute un gestionnaire d'événement "click" à l'élément "Supprimer"
-    deleteItem[a].addEventListener('click', (event) => {
+    deleteItem[a].addEventListener("click", (event) => {
       // Empêche le comportement par défaut (rechargement de la page)
-      event.preventDefault(); 
-   
-            // Enregistre l'ID et la couleur du produit à supprimer
+      event.preventDefault();
 
-          let deleteId = myCart[a].id;
-      let deleteColor = mycart[a].couleur;
-      
+      // Enregistre l'ID et la couleur du produit à supprimer
+
+      let deleteId = myCart[a].id;
+      let deleteColor = myCart[a].color;
+
       // Filtre les  produits à conserver dans le panier et supprime le produit cliqué
 
-      myCart =mycart.filter(
-        (element) => element.id !== deleted || element.color !== deleteColor);
-      
-          // Mettre à jour le LocalStorage avec les produits restants
-      localStorage.setItem('mycart', JSON.stringify(myCart));
+      myCart = myCart.filter(
+        (element) => element.id !== deleteId || element.Color !== deleteColor
+      );
 
-         // Affiche un message de confirmation de la suppression du produit
-      alert('Votre article a bien été retiré de votre panier !');
+      // Mettre à jour le LocalStorage avec les produits restants
+      localStorage.setItem("myCart", JSON.stringify(myCart));
 
-      // Actualise la page du panier
-      window.location.href = 'cart.html';
+      // Affiche un message de confirmation de la suppression du produit
+      alert("Votre article a bien été retiré de votre panier !");
     });
+    // Actualise la page du panier
+    window.location.href = "cart.html";
+  }
+}
 
-        */
