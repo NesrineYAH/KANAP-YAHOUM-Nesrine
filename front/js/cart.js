@@ -70,12 +70,10 @@ fetch("http://localhost:3000/api/products")
     }
   });*/
 
-
-
 const cartItems = document.getElementById("cart__items");
 let totalQuantity = document.getElementById("totalQuantity");
 let myCart = localStorage.getItem("myCart");
-let totalPrice = document.getElementById("totalPrice");
+let totalPrice = document.querySelector("#totalPrice");
 
 // créer une fonction pour obtenir le tbleau de mon panier
 
@@ -150,38 +148,38 @@ console.log("Total prix panier", totalPrice);
 UpdatetotalPrice();
 displayTotalPrice();
 
-/*// En supposant que la variable myCart est toujours disponible
-let totalCartPrice = 0 // Initialisation de la variable qui contiendra le prix total du panier
-for (let item of myCart) {
-  fetch(`http://localhost:3000/api/products/${item.id}`)
-    .then(res => res.json())
-    .then(product => {
-      totalCartPrice += item.quantite * product.price
-  }
-}
-*/
-
 // créer une fonctione pour mettre à jours le panier
 
 function UpdatetotalPrice() {
   // on donne une valeur initial à totalPrice
-  let totalPriceCart = 0;
 
-  for (let item in itemsMyCart) {
-    fetch(`http://localhost:3000/api/products/${item.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        totalPriceCart += item.quantite * data.price;
-        totalPrice.textContent = totalPriceCart;
-        // document.getElementById("totalPrice").innerText = Number(totalPrice);
-      });
-  }
+  fetch(`http://localhost:3000/api/products/`)
+    .then((res) => res.json())
+    .then((data) => {
+      let totalPriceCart = 0;
+      let quantitePanier = 0;
+      let TotalpriceItem = 0;
+      for (let i = 0; i < itemsMyCart.length; i++) {
+        let id = itemsMyCart[i].id;
+        let a = data.find((p) => id === p._id);
+        console.log("a", a);
+        let quantItem = itemsMyCart[i].quantite;
+        let prix = a.price;
+        TotalpriceItem = quantItem * a.price;
+        quantitePanier += parseInt(quantItem);
+        totalPriceCart += parseInt(TotalpriceItem);
+        console.log("totalPriceCart", totalPriceCart);
+      }
+      document.querySelector("#totalQuantity").innerHTML = quantitePanier;
+      document.querySelector("#totalPrice").innerHTML = totalPriceCart;
+    });
 }
+
 console.log("Total prix article", totalPrice);
 UpdatetotalPrice();
 
 // Affichage du montant total du panier
-/*
+
 let totalProductPricePanier = 0;
 
 function displayTotalPrice() {
@@ -191,18 +189,17 @@ function displayTotalPrice() {
 }
 
 console.log("afficher le prix total du panier", totalProductPricePanier);
-console.log("typeof totalProductPricePanier");
-*/
+
 UpdatetotalPrice();
 //displayTotalPrice();
+/*           debut commentaire
 removeProduct();
-
 
 // Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
 
 function removeProduct() {
   // Récupère tous les éléments HTML avec la classe "deleteItem"
-  const deleteItem = document.querySelector(".deleteItem");
+ // const deleteItem = document.getElementsByClassName(".deleteItem");
 
   // Pour chaque élément "Supprimer"
   for (let a = 0; a < deleteItem.length; a++) {
@@ -232,4 +229,4 @@ function removeProduct() {
     window.location.href = "cart.html";
   }
 }
-
+*/
