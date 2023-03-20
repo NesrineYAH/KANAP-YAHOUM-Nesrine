@@ -128,23 +128,7 @@ console.log("le nombre total de mon panier:", totalArticles);
 totalQuantity.textContent = totalArticles;
 
 // afficher le prix dans le panier
-/*
-let itemPrice = itemsMyCart.price;
-let totalPrice = totalArticles * itemPrice;
-totalPrice = 0;
 
-// En supposant que la  itemMyCart est toujours disponible
-for (let a = 0; a < itemsMyCart.lentgh; a++) {
-  totalPrice = totalArticles * itemPrice;
-  totalPrice.textContent = parseInt(totalPrice);
-  totalPrice += Number(totalPrice);
-}
-console.log("le prix total d'un article", totalPrice);
-
-let totalProductPricePanier = [];
-totalProductPricePanier += parseInt(totalPrice);
-console.log("Total prix panier", totalPrice);
-*/
 UpdatetotalPrice();
 displayTotalPrice();
 
@@ -192,14 +176,13 @@ console.log("afficher le prix total du panier", totalProductPricePanier);
 
 UpdatetotalPrice();
 //displayTotalPrice();
-/*           debut commentaire
 removeProduct();
 
 // Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
 
 function removeProduct() {
   // Récupère tous les éléments HTML avec la classe "deleteItem"
- // const deleteItem = document.getElementsByClassName(".deleteItem");
+  let deleteItem = document.getElementsByClassName("deleteItem");
 
   // Pour chaque élément "Supprimer"
   for (let a = 0; a < deleteItem.length; a++) {
@@ -207,7 +190,7 @@ function removeProduct() {
     deleteItem[a].addEventListener("click", (event) => {
       // Empêche le comportement par défaut (rechargement de la page)
       event.preventDefault();
-
+      let myCart = JSON.parse(localStorage.getItem("myCart"));
       // Enregistre l'ID et la couleur du produit à supprimer
 
       let deleteId = myCart[a].id;
@@ -222,6 +205,8 @@ function removeProduct() {
       // Mettre à jour le LocalStorage avec les produits restants
       localStorage.setItem("myCart", JSON.stringify(myCart));
 
+      console.log("deleteItem", deleteItem);
+
       // Affiche un message de confirmation de la suppression du produit
       alert("Votre article a bien été retiré de votre panier !");
     });
@@ -229,4 +214,3 @@ function removeProduct() {
     window.location.href = "cart.html";
   }
 }
-*/
