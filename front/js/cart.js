@@ -74,6 +74,9 @@ const cartItems = document.getElementById("cart__items");
 let totalQuantity = document.getElementById("totalQuantity");
 let myCart = localStorage.getItem("myCart");
 let totalPrice = document.querySelector("#totalPrice");
+let totalPriceCartTotal = 0;
+let totalQuantiteCartTotal = 0;
+const form = document.querySelector(".cart__order__form");
 
 // créer une fonction pour obtenir le tbleau de mon panier
 
@@ -91,8 +94,11 @@ for (let item of itemsMyCart) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      totalPriceCartTotal += parseInt(item.quantite) * parseInt(data.price);
+      totalPrice.innerHTML = totalPriceCartTotal;
+
       let cartArticle = `
-          <article class="cart__item" data-id="${data.id}" data-color="${item.couleur}">
+          <article class="cart__item" data-id="${item.id}" data-color="${item.couleur}">
             <div class="cart__item__img">
               <img src="${data.imageUrl}" alt="${data.altTxt}">
             </div>
@@ -108,7 +114,7 @@ for (let item of itemsMyCart) {
                   <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantite}">
                 </div>
                 <div class="cart__item__content__settings__delete">
-                  <p class="deleteItem">Supprimer</p>
+                  <p class="deleteItem" onclick="removeProduct('${item.id}','${item.couleur}', this, ${data.price})">Supprimer</p>
                 </div>
               </div>
             </div>
@@ -120,21 +126,19 @@ for (let item of itemsMyCart) {
 }
 // Afficher la quantité des article dans le panier
 
-let totalArticles = 0;
 for (let item of itemsMyCart) {
-  totalArticles += Number(item.quantite);
+  totalQuantiteCartTotal += Number(item.quantite);
 }
-console.log("le nombre total de mon panier:", totalArticles);
-totalQuantity.textContent = totalArticles;
+console.log("le nombre total de mon panier:", totalQuantiteCartTotal);
+totalQuantity.textContent = totalQuantiteCartTotal;
 
 // afficher le prix dans le panier
 
-UpdatetotalPrice();
-displayTotalPrice();
+//UpdatetotalPrice();
 
 // créer une fonctione pour mettre à jours le panier
 
-function UpdatetotalPrice() {
+/*function UpdatetotalPrice() {
   // on donne une valeur initial à totalPrice
 
   fetch(`http://localhost:3000/api/products/`)
@@ -160,57 +164,57 @@ function UpdatetotalPrice() {
 }
 
 console.log("Total prix article", totalPrice);
-UpdatetotalPrice();
+//UpdatetotalPrice();
+*/
+function removeProduct(deleteId, deleteColor, element, price) {
+  let myCart = JSON.parse(localStorage.getItem("myCart"));
+  // Enregistre l'ID et la couleur du produit à supprimer
 
-// Affichage du montant total du panier
+  // Filtre les  produits à conserver dans le panier et supprime le produit cliqué
 
-let totalProductPricePanier = 0;
+  //update la quantite
+  let index = myCart.findIndex(
+    (p) => p.id === deleteId && p.couleur === deleteColor
+  );
 
-function displayTotalPrice() {
-  let totalProductPricePanier = document.getElementById("totalPrice");
-  totalProductPricePanier.innerHTML += UpdatetotalPrice();
-  totalProductPricePanier == parseInt(Number(totalPrice));
-}
-
-console.log("afficher le prix total du panier", totalProductPricePanier);
-
-UpdatetotalPrice();
-//displayTotalPrice();
-removeProduct();
-
-// Supprime un produit du panier lorsque le bouton "Supprimer" est cliqué
-
-function removeProduct() {
-  // Récupère tous les éléments HTML avec la classe "deleteItem"
-  let deleteItem = document.getElementsByClassName("deleteItem");
-
-  // Pour chaque élément "Supprimer"
-  for (let a = 0; a < deleteItem.length; a++) {
-    // Ajoute un gestionnaire d'événement "click" à l'élément "Supprimer"
-    deleteItem[a].addEventListener("click", (event) => {
-      // Empêche le comportement par défaut (rechargement de la page)
-      event.preventDefault();
-      let myCart = JSON.parse(localStorage.getItem("myCart"));
-      // Enregistre l'ID et la couleur du produit à supprimer
-
-      let deleteId = myCart[a].id;
-      let deleteColor = myCart[a].color;
-
-      // Filtre les  produits à conserver dans le panier et supprime le produit cliqué
-
-      myCart = myCart.filter(
-        (element) => element.id !== deleteId || element.Color !== deleteColor
-      );
-
-      // Mettre à jour le LocalStorage avec les produits restants
-      localStorage.setItem("myCart", JSON.stringify(myCart));
-
-      console.log("deleteItem", deleteItem);
-
-      // Affiche un message de confirmation de la suppression du produit
-      alert("Votre article a bien été retiré de votre panier !");
-    });
-    // Actualise la page du panier
-    window.location.href = "cart.html";
+  if (index === -1) {
+    return;
   }
+
+  let articleCart = myCart[index];
+
+  console.log(articleCart.quantite);
+
+  //update le prix total
+  totalPriceCartTotal =
+    totalPriceCartTotal - parseInt(articleCart.quantite) * price;
+  totalPrice.innerHTML = totalPriceCartTotal;
+
+  totalQuantity.innerHTML = totalQuantiteCartTotal - articleCart.quantite;
+  myCart = myCart.filter(
+    (element) => element.id !== deleteId && element.couleur !== deleteColor
+  );
+
+  // Mettre à jour le LocalStorage avec les produits restants
+  localStorage.setItem("myCart", JSON.stringify(myCart));
+
+  //récuperation du bloc article pour le supprimer
+  element.parentElement.parentElement.parentElement.parentElement.remove();
+
+  // Affiche un message de confirmation de la suppression du produit
+  alert("Votre article a bien été retiré de votre panier !");
 }
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  console.log(form.firstName.value);
+  const infoData = {
+    firstName: form.firstName.value,
+    lastName: form.lastName.value,
+    addresse: form.address.value,
+    ville: form.city.value,
+    email: form.email.value,
+  };
+  console.log(infoData);
+});
