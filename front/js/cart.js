@@ -227,6 +227,36 @@ form.addEventListener("submit", (e) => {
   console.log(infoData);
 });*/
 
+function setupQuantity() {
+  let itemsMyCart = getmyCart();
+  console.log("entrer dans SetupOuantity", itemsMyCart);
+  let inputQuantiteModifie = document.querySelectorAll(".itemQuantity");
+  console.log("entrer dans SetupOuantity", inputQuantiteModifie);
+  for (let i = 0; i < inputQuantiteModifie.length; i++) {
+    console.log("entrer dans la boucle");
+    inputQuantiteModifie[i].addEventListener("change", () => {
+      console.log("entrer dans addEvent");
+      let oldQuantity = itemsMyCart[i].quantite;
+      console.log("entrer dans SetupOuantity", oldQuantity);
+      let newQuantity = inputQuantiteModifie[i].value;
+      console.log("entrer dans SetupOuantity", newQuantity);
+      if (newQuantity > 100) {
+        alert("Non pas plus de 100");
+      } else if (newQuantity <= 0) {
+        alert("Mettre article plus de 0");
+      } else {
+        let quantiteFinal = itemsMyCart.find(
+          (p) => p.newQuantity !== oldQuantity
+        );
+        quantiteFinal.quantite = newQuantity;
+        localStorage.setItem("myCart", JSON.stringify(itemsMyCart));
+        alert("mise à jour quantite");
+      }
+      return location.reload();
+    });
+  }
+}
+
 btnCommander.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -238,9 +268,9 @@ btnCommander.addEventListener("click", (e) => {
     email: document.querySelector("#email").value,
   };
   console.log(infoData);
-  console.log("entrer dans validationFirstName");
+  // console.log("entrer dans validationFirstName");
   function validationFirstName() {
-    console.log("entrer dans validationFirstName");
+    // console.log("entrer dans validationFirstName");
     let firstName = infoData.firstName;
     const firstNameError = document.querySelector("#firstNameErrorMsg");
     const inputFirstName = document.querySelector("#firstName");
@@ -260,7 +290,7 @@ btnCommander.addEventListener("click", (e) => {
     }
   }
   function validationLastName() {
-    console.log("entrer dans validationLastName");
+    // console.log("entrer dans validationLastName");
     let lastName = infoData.lastName;
     const lastNameError = document.querySelector("#lastNameErrorMsg");
     const inputlastName = document.querySelector("#lastName");
@@ -290,33 +320,30 @@ btnCommander.addEventListener("click", (e) => {
     console.log("formaulaire ok");
   }
 });
-function setupQuantity() {
-  console.log("entrer dans SetupOuantity");
-  let itemsMyCart = getmyCart();
-  console.log("entrer dans SetupOuantity", itemsMyCart);
-  let inputQuantiteModifie = document.querySelectorAll(".itemQuantity");
-  console.log("entrer dans SetupOuantity", inputQuantiteModifie);
-  for (let i = 0; i < inputQuantiteModifie.length; i++) {
-    console.log("entrer dans la boucle");
-    inputQuantiteModifie[i].addEventListener("change", () => {
-      console.log("entrer dans addEvent");
-      let oldQuantity = itemsMyCart[i].quantite;
-      console.log("entrer dans SetupOuantity", oldQuantity);
-      let newQuantity = inputQuantiteModifie[i].value;
-      console.log("entrer dans SetupOuantity", newQuantity);
-      if (newQuantity > 100) {
-        alert("Non pas plus de 100");
-      } else if (newQuantity <= 0) {
-        alert("Mettre article plus de 0");
-      } else {
-        let quantiteFinal = itemsMyCart.find(
-          (p) => p.newQuantity !== oldQuantity
-        );
-        quantiteFinal.quantite = newQuantity;
-        localStorage.setItem("myCart", JSON.stringify(itemsMyCart));
-        alert("mise à jour quantite");
-      }
-      return location.reload();
-    });
+
+function validationAdress() {
+  console.log("entrer dans validationAdress");
+  let adress = infoData.addresse;
+  const adressError = document.querySelector("#addressErrorMsg");
+  const inputAdress = document.querySelector("#address");
+  const regexAdress = new RegExp(
+    /^\d{1,3}( bis| ter| quater)? (rue|avenue|boulevard|route|chemin|impasse) [a-zA-ZÀ-ÿ]+$/i
+  );
+  if (regexAdress.test(adress)) {
+    adressError.innerHTML = "";
+    inputAdress.style.border = "2px solid green";
+    return true;
+  } else {
+    adressError.innerHTML =
+      "Erreur de votre adresse, veuillez remplir votre adresse excate";
+    inputAdress.style.border = "2px solid red";
+    return false;
   }
+}
+if (adress === "") {
+  alert("merci de remplir les champs de formulaire");
+} else if (validationAdress() === false) {
+  alert("erreur merci de vérifier votre formulaire");
+} else {
+  console.log("formaulaire bien rempli");
 }
