@@ -77,6 +77,7 @@ let totalPrice = document.querySelector("#totalPrice");
 let totalPriceCartTotal = 0;
 let totalQuantiteCartTotal = 0;
 const form = document.querySelector(".cart__order__form");
+const btnCommander = document.querySelector("#order");
 
 // créer une fonction pour obtenir le tbleau de mon panier
 
@@ -120,7 +121,9 @@ for (let item of itemsMyCart) {
             </div>
           </article>`;
       cartItems.insertAdjacentHTML("beforeend", cartArticle);
+      setupQuantity();
     })
+
     .catch((err) => console.error(err))
     .catch((err) => console.error(err));
 }
@@ -132,8 +135,7 @@ for (let item of itemsMyCart) {
 console.log("le nombre total de mon panier:", totalQuantiteCartTotal);
 totalQuantity.textContent = totalQuantiteCartTotal;
 
-// afficher le prix dans le panier
-
+// afficher le prix dans le panie
 //UpdatetotalPrice();
 
 // créer une fonctione pour mettre à jours le panier
@@ -166,6 +168,7 @@ totalQuantity.textContent = totalQuantiteCartTotal;
 console.log("Total prix article", totalPrice);
 //UpdatetotalPrice();
 */
+
 function removeProduct(deleteId, deleteColor, element, price) {
   let myCart = JSON.parse(localStorage.getItem("myCart"));
   // Enregistre l'ID et la couleur du produit à supprimer
@@ -201,10 +204,15 @@ function removeProduct(deleteId, deleteColor, element, price) {
   //récuperation du bloc article pour le supprimer
   element.parentElement.parentElement.parentElement.parentElement.remove();
 
+  // Affiche un message d'information de la suppression du produit
+  alert("Vous allez retirer cet article de votre panier !");
+  console.log("articleCart supprime");
   // Affiche un message de confirmation de la suppression du produit
-  alert("Votre article a bien été retiré de votre panier !");
+  alert("votre article a bien été supprimé de votre panier");
 }
 
+// Formulaire : Bouton "Commander"
+/*
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -217,4 +225,98 @@ form.addEventListener("submit", (e) => {
     email: form.email.value,
   };
   console.log(infoData);
+});*/
+
+btnCommander.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const infoData = {
+    firstName: document.querySelector("#firstName").value,
+    lastName: document.querySelector("#lastName").value,
+    addresse: document.querySelector("#address").value,
+    ville: document.querySelector("#city").value,
+    email: document.querySelector("#email").value,
+  };
+  console.log(infoData);
+  console.log("entrer dans validationFirstName");
+  function validationFirstName() {
+    console.log("entrer dans validationFirstName");
+    let firstName = infoData.firstName;
+    const firstNameError = document.querySelector("#firstNameErrorMsg");
+    const inputFirstName = document.querySelector("#firstName");
+    const regexFirstName = new RegExp(
+      /^[a-zA-ZÀ-ÿ]{2,35}([-' ,][a-zA-ZÀ-ÿ]+)*$/i
+    );
+
+    if (regexFirstName.test(firstName)) {
+      firstNameError.innerHTML = "";
+      inputFirstName.style.border = "2px solid green";
+      return true;
+    } else {
+      firstNameError.innerHTML =
+        "Erreur de votre prenon, 2 lettres minimum, aucun chiffre";
+      inputFirstName.style.border = "2px solid red";
+      return false;
+    }
+  }
+  function validationLastName() {
+    console.log("entrer dans validationLastName");
+    let lastName = infoData.lastName;
+    const lastNameError = document.querySelector("#lastNameErrorMsg");
+    const inputlastName = document.querySelector("#lastName");
+    const regexlastName = new RegExp(
+      /^[a-zA-ZÀ-ÿ]{2,35}([-' ,][a-zA-ZÀ-ÿ]+)*$/i
+    );
+
+    if (regexlastName.test(lastName)) {
+      lastNameError.innerHTML = "";
+      inputlastName.style.border = "2px solid green";
+      return true;
+    } else {
+      lastNameError.innerHTML =
+        "Erreur de votre prenon, 2 lettres minimum, aucun chiffre";
+      inputlastName.style.border = "2px solid red";
+      return false;
+    }
+  }
+  if (firstName === null || lastName === null) {
+    alert("merci de remplir les champs de formulaire");
+  } else if (
+    validationFirstName() === false ||
+    validationLastName() === false
+  ) {
+    alert("erreur merci de vérifier votre formulaire");
+  } else {
+    console.log("formaulaire ok");
+  }
 });
+function setupQuantity() {
+  console.log("entrer dans SetupOuantity");
+  let itemsMyCart = getmyCart();
+  console.log("entrer dans SetupOuantity", itemsMyCart);
+  let inputQuantiteModifie = document.querySelectorAll(".itemQuantity");
+  console.log("entrer dans SetupOuantity", inputQuantiteModifie);
+  for (let i = 0; i < inputQuantiteModifie.length; i++) {
+    console.log("entrer dans la boucle");
+    inputQuantiteModifie[i].addEventListener("change", () => {
+      console.log("entrer dans addEvent");
+      let oldQuantity = itemsMyCart[i].quantite;
+      console.log("entrer dans SetupOuantity", oldQuantity);
+      let newQuantity = inputQuantiteModifie[i].value;
+      console.log("entrer dans SetupOuantity", newQuantity);
+      if (newQuantity > 100) {
+        alert("Non pas plus de 100");
+      } else if (newQuantity <= 0) {
+        alert("Mettre article plus de 0");
+      } else {
+        let quantiteFinal = itemsMyCart.find(
+          (p) => p.newQuantity !== oldQuantity
+        );
+        quantiteFinal.quantite = newQuantity;
+        localStorage.setItem("myCart", JSON.stringify(itemsMyCart));
+        alert("mise à jour quantite");
+      }
+      return location.reload();
+    });
+  }
+}
