@@ -309,6 +309,7 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
+
   if (firstName === null || lastName === null) {
     alert("merci de remplir les champs de formulaire");
   } else if (
@@ -317,33 +318,133 @@ btnCommander.addEventListener("click", (e) => {
   ) {
     alert("erreur merci de vérifier votre formulaire");
   } else {
-    console.log("formaulaire ok");
+    // console.log("formaulaire ok");
+  }
+
+  function validationAddress() {
+    //  console.log("entrer dans validationAdress");
+    let address = infoData.addresse;
+    const addressError = document.querySelector("#addressErrorMsg");
+    const inputAddress = document.querySelector("#address");
+    const regexAddress = new RegExp(
+      /^\d{1,3}( bis| ter| quater)? (rue|avenue|boulevard|route|chemin|impasse) [a-zA-ZÀ-ÿ]+$/i
+    );
+    //  console.log("afficher regexAddress");
+    if (regexAddress.test(address)) {
+      addressError.innerHTML = "";
+      inputAddress.style.border = "2px solid green";
+      return true;
+    } else {
+      addressError.innerHTML =
+        "Merci de renseigner une adresse valide (Numéro, voie, nom de la voie)";
+      inputAddress.style.border = "2px solid red";
+      return false;
+    }
+  }
+  if (address === "") {
+    alert("merci de remplir les champs de formulaire");
+  } else if (validationAddress() === false) {
+    alert("erreur merci de vérifier votre formulaire");
+  } else {
+    //console.log("formulaire bien rempli");
+  }
+  function validationVille() {
+    //  console.log("entrer dans validationVille");
+    let ville = infoData.ville;
+    const villeErrorMsg = document.querySelector("#cityErrorMsg");
+    const inputVille = document.querySelector("#city");
+    const regexVille = new RegExp(
+      /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/
+    );
+
+    if (regexVille.test(ville)) {
+      villeErrorMsg.innerHTML = "";
+      inputVille.style.border = "2px solid green";
+      return true;
+    } else {
+      villeErrorMsg.innerHTML =
+        "Erreur de votre ville, la ville ne contient aucun chiffre";
+      inputVille.style.border = "2px solid red";
+      return false;
+    }
+  }
+  if ((ville = "")) {
+    alert("merci de remplir les champs de formulaire");
+  } else if (validationVille() === false) {
+    alert("erreur merci de vérifier votre formulaire");
+  } else {
+    // console.log("formulaire ok");
+  }
+
+  function validationEmail() {
+    // console.log("entrer dans validationEmail");
+    let email = infoData.email;
+    const emailError = document.querySelector("#emailErrorMsg");
+    const inputEmail = document.querySelector("#email");
+    const regexemail = new RegExp(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i
+    );
+
+    if (regexemail.test(email)) {
+      emailError.innerHTML = "";
+      inputEmail.style.border = "2px solid green";
+      return true;
+    } else {
+      emailError.innerHTML =
+        "Votre address mail est érroné ,veuillez entrer une adresse mail exacte";
+      inputEmail.style.border = "2px solid red";
+      return false;
+    }
+  }
+  if (email === "") {
+    alert("merci de remplir les champs de formulaire");
+  } else if (validationEmail() === false) {
+    alert("erreur merci de vérifier votre addresse mail");
+  } else {
+    // console.log("formulaire ok");
+  }
+
+  //Contrôle validité formulaire avant envoie dans le locale storage :
+
+  if (
+    validationFirstName() &&
+    validationLastName() &&
+    validationAddress() &&
+    validationVille() &&
+    validationEmail()
+  ) {
+    //Mettre l'objet "contact" dans le local storage :
+    localStorage.setItem("infoData", JSON.stringify(infoData));
+    sendFromToServer();
+  } else {
+    alert("❌ Veillez bien remplir le formulaire ❌");
+  }
+
+  /********************************FIN GESTION DU FORMULAIRE ****************************/
+
+  // Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST :
+
+  let orderId = "";
+  function sendFromToServer() {
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify({ infoData }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      // Ensuite on stock la réponse de l'api (orderId) :
+      .then((response) => {
+        return response.json();
+      })
+
+      .then((server) => {
+        orderId = server.orderId;
+        // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable :
+        if (orderId != "") {
+          alert("✅ Votre commande à bient était prise en compte ✅");
+          location.href = "confirmation.html?id=" + orderId;
+        }
+      });
   }
 });
-
-function validationAdress() {
-  console.log("entrer dans validationAdress");
-  let adress = infoData.addresse;
-  const adressError = document.querySelector("#addressErrorMsg");
-  const inputAdress = document.querySelector("#address");
-  const regexAdress = new RegExp(
-    /^\d{1,3}( bis| ter| quater)? (rue|avenue|boulevard|route|chemin|impasse) [a-zA-ZÀ-ÿ]+$/i
-  );
-  if (regexAdress.test(adress)) {
-    adressError.innerHTML = "";
-    inputAdress.style.border = "2px solid green";
-    return true;
-  } else {
-    adressError.innerHTML =
-      "Erreur de votre adresse, veuillez remplir votre adresse excate";
-    inputAdress.style.border = "2px solid red";
-    return false;
-  }
-}
-if (adress === "") {
-  alert("merci de remplir les champs de formulaire");
-} else if (validationAdress() === false) {
-  alert("erreur merci de vérifier votre formulaire");
-} else {
-  console.log("formaulaire bien rempli");
-}
