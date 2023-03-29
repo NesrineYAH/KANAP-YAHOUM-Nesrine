@@ -1,74 +1,4 @@
 //* FETCH | Récupération et Transmission des données de l'API
-/*
-function getmyCart() {
-  let myCart = localStorage.getItem("myCart");
-  // Si mon panier n'est pas vide [...]
-  if (myCart === null) {
-    return [];
-  } else {
-    return JSON.parse(myCart);
-  }
-}
-let itemsMyCart = getmyCart();
-console.log("liste des articles dans mon panier", itemsMyCart);
-
-fetch("http://localhost:3000/api/products")
-  // Obtention des données de l'API => conversion du résultat en .json
-  .then((res) => res.json())
-  .then((data) => {
-    // document.querySelector("#cart__items").innerHTML = "";
-    const cartArea = document.querySelector("#cart__items");
-    for (let i = 0; i < itemsMyCart.length; i++) {
-      let id = itemsMyCart[i].id;
-      let couleur = itemsMyCart[i].couleur;
-      let quantite = itemsMyCart[i].quantite;
-      let item = data.find((p) => id === p._id);
-     
-
-      const article = document.createElement("article");
-      document.querySelector("#cart__items").appendChild(article);
-      article.className = "cart__item";
-      article.setAttribute("data-id", id);
-      article.setAttribute("data-color", couleur);
-
-      const Image = document.createElement("img");
-      article.appendChild(Image);
-      //Image.classList.add(".cart__item__img");
-      Image.className = ".cart__item__img";
-      Image.alt = data.altTxt;
-      Image.src = data.imageUrl;
-
-      const cardItem = document.createElement("div");
-      cardItem.classList.add("cart__item__content");
-      cardItem.classList.add("cart__item__img");
-      cardItem.classList.add("cart__item");
-  
-
-      const description = document.createElement("cardItem");
-      description.classList.add("cart__item__content__description");
-
-      const h2 = document.createElement("h2");
-      h2.textContent = data.name;
-
-      const p = document.createElement("p");
-      p.textContent = data.colors;
-
-      const p2 = document.createElement("p");
-      p2.textContent = data.price + " €";
-
-      description.appendChild(h2);
-      description.appendChild(p);
-      description.appendChild(p2);
-
-      cartArea.appendChild(cardItem);
-      cartArea.appendChild(description);
-      cartArea.appendChild(article);
-      cartArea.appendChild(Image);
-      /* cartArea.appendChild(h2);
-      cartArea.appendChild(p);
-      cartArea.appendChild(p2);
-    }
-  });*/
 
 const cartItems = document.getElementById("cart__items");
 let totalQuantity = document.getElementById("totalQuantity");
@@ -95,6 +25,7 @@ for (let item of itemsMyCart) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      // afficher le prix dans le panier
       totalPriceCartTotal += parseInt(item.quantite) * parseInt(data.price);
       totalPrice.innerHTML = totalPriceCartTotal;
 
@@ -135,39 +66,7 @@ for (let item of itemsMyCart) {
 console.log("le nombre total de mon panier:", totalQuantiteCartTotal);
 totalQuantity.textContent = totalQuantiteCartTotal;
 
-// afficher le prix dans le panie
-//UpdatetotalPrice();
-
-// créer une fonctione pour mettre à jours le panier
-
-/*function UpdatetotalPrice() {
-  // on donne une valeur initial à totalPrice
-
-  fetch(`http://localhost:3000/api/products/`)
-    .then((res) => res.json())
-    .then((data) => {
-      let totalPriceCart = 0;
-      let quantitePanier = 0;
-      let TotalpriceItem = 0;
-      for (let i = 0; i < itemsMyCart.length; i++) {
-        let id = itemsMyCart[i].id;
-        let a = data.find((p) => id === p._id);
-        console.log("a", a);
-        let quantItem = itemsMyCart[i].quantite;
-        let prix = a.price;
-        TotalpriceItem = quantItem * a.price;
-        quantitePanier += parseInt(quantItem);
-        totalPriceCart += parseInt(TotalpriceItem);
-        console.log("totalPriceCart", totalPriceCart);
-      }
-      document.querySelector("#totalQuantity").innerHTML = quantitePanier;
-      document.querySelector("#totalPrice").innerHTML = totalPriceCart;
-    });
-}
-
-console.log("Total prix article", totalPrice);
-//UpdatetotalPrice();
-*/
+//créer une fonction pour supprimer des articles dans le panier
 
 function removeProduct(deleteId, deleteColor, element, price) {
   let myCart = JSON.parse(localStorage.getItem("myCart"));
@@ -212,20 +111,6 @@ function removeProduct(deleteId, deleteColor, element, price) {
 }
 
 // Formulaire : Bouton "Commander"
-/*
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  console.log(form.firstName.value);
-  const infoData = {
-    firstName: form.firstName.value,
-    lastName: form.lastName.value,
-    addresse: form.address.value,
-    ville: form.city.value,
-    email: form.email.value,
-  };
-  console.log(infoData);
-});*/
 
 function setupQuantity() {
   let itemsMyCart = getmyCart();
@@ -264,7 +149,7 @@ btnCommander.addEventListener("click", (e) => {
     firstName: document.querySelector("#firstName").value,
     lastName: document.querySelector("#lastName").value,
     addresse: document.querySelector("#address").value,
-    ville: document.querySelector("#city").value,
+    city: document.querySelector("#city").value,
     email: document.querySelector("#email").value,
   };
   console.log(infoData);
@@ -310,17 +195,6 @@ btnCommander.addEventListener("click", (e) => {
     }
   }
 
-  if (firstName === null || lastName === null) {
-    alert("merci de remplir les champs de formulaire");
-  } else if (
-    validationFirstName() === false ||
-    validationLastName() === false
-  ) {
-    alert("erreur merci de vérifier votre formulaire");
-  } else {
-    // console.log("formaulaire ok");
-  }
-
   function validationAddress() {
     //  console.log("entrer dans validationAdress");
     let address = infoData.addresse;
@@ -341,39 +215,25 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
-  if (address === "") {
-    alert("merci de remplir les champs de formulaire");
-  } else if (validationAddress() === false) {
-    alert("erreur merci de vérifier votre formulaire");
-  } else {
-    //console.log("formulaire bien rempli");
-  }
+
   function validationVille() {
-    //  console.log("entrer dans validationVille");
-    let ville = infoData.ville;
-    const villeErrorMsg = document.querySelector("#cityErrorMsg");
-    const inputVille = document.querySelector("#city");
-    const regexVille = new RegExp(
+    let city = infoData.city;
+    const cityErrorMsg = document.querySelector("#cityErrorMsg");
+    const inputCity = document.querySelector("#city");
+    const regexCity = new RegExp(
       /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/
     );
 
-    if (regexVille.test(ville)) {
-      villeErrorMsg.innerHTML = "";
-      inputVille.style.border = "2px solid green";
+    if (regexCity.test(city)) {
+      cityErrorMsg.innerHTML = "";
+      inputCity.style.border = "2px solid green";
       return true;
     } else {
-      villeErrorMsg.innerHTML =
+      cityErrorMsg.innerHTML =
         "Erreur de votre ville, la ville ne contient aucun chiffre";
-      inputVille.style.border = "2px solid red";
+      inputCity.style.border = "2px solid red";
       return false;
     }
-  }
-  if ((ville = "")) {
-    alert("merci de remplir les champs de formulaire");
-  } else if (validationVille() === false) {
-    alert("erreur merci de vérifier votre formulaire");
-  } else {
-    // console.log("formulaire ok");
   }
 
   function validationEmail() {
@@ -396,28 +256,27 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
-  if (email === "") {
-    alert("merci de remplir les champs de formulaire");
-  } else if (validationEmail() === false) {
-    alert("erreur merci de vérifier votre addresse mail");
-  } else {
-    // console.log("formulaire ok");
-  }
 
   //Contrôle validité formulaire avant envoie dans le locale storage :
-
   if (
-    validationFirstName() &&
-    validationLastName() &&
-    validationAddress() &&
-    validationVille() &&
-    validationEmail()
+    firstName === null ||
+    lastName === null ||
+    address === null ||
+    city === null ||
+    email === null
   ) {
-    //Mettre l'objet "contact" dans le local storage :
-    localStorage.setItem("infoData", JSON.stringify(infoData));
-    sendFromToServer();
+    alert("merci de remplir les champs de formulaire");
+  } else if (
+    validationFirstName() === false ||
+    validationLastName() === false ||
+    validationAddress() === false ||
+    validationVille() === false ||
+    validationEmail() === false
+  ) {
+    alert("❌ Veuillez bien remplir le formulaire ❌");
   } else {
-    alert("❌ Veillez bien remplir le formulaire ❌");
+    console.log("formaulaire ok");
+    sendFromToServer();
   }
 
   /********************************FIN GESTION DU FORMULAIRE ****************************/
@@ -426,9 +285,11 @@ btnCommander.addEventListener("click", (e) => {
 
   let orderId = "";
   function sendFromToServer() {
+    let lesProduits = itemsMyCart.map((i) => i.id);
+    console.log(lesProduits.lentgh);
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
-      body: JSON.stringify({ infoData }),
+      body: JSON.stringify(infoData),
       headers: {
         "Content-Type": "application/json",
       },
@@ -439,11 +300,15 @@ btnCommander.addEventListener("click", (e) => {
       })
 
       .then((server) => {
-        orderId = server.orderId;
-        // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable :
-        if (orderId != "") {
-          alert("✅ Votre commande à bient était prise en compte ✅");
-          location.href = "confirmation.html?id=" + orderId;
+        if (lesProduits.length > 0) {
+          orderId = server.orderId;
+          // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable :
+          if (orderId != "") {
+            alert("✅ Votre commande à bient était prise en compte ✅");
+            location.href = "confirmation.html?id=" + orderId;
+          }
+        } else {
+          alert("Votre est panier est vide");
         }
       });
   }
