@@ -153,9 +153,8 @@ btnCommander.addEventListener("click", (e) => {
     email: document.querySelector("#email").value,
   };
   console.log(infoData);
-  // console.log("entrer dans validationFirstName");
+  console.log("entrer dans validationFirstName");
   function validationFirstName() {
-    // console.log("entrer dans validationFirstName");
     let firstName = infoData.firstName;
     const firstNameError = document.querySelector("#firstNameErrorMsg");
     const inputFirstName = document.querySelector("#firstName");
@@ -175,7 +174,6 @@ btnCommander.addEventListener("click", (e) => {
     }
   }
   function validationLastName() {
-    // console.log("entrer dans validationLastName");
     let lastName = infoData.lastName;
     const lastNameError = document.querySelector("#lastNameErrorMsg");
     const inputlastName = document.querySelector("#lastName");
@@ -196,14 +194,13 @@ btnCommander.addEventListener("click", (e) => {
   }
 
   function validationAddress() {
-    //  console.log("entrer dans validationAdress");
     let address = infoData.addresse;
     const addressError = document.querySelector("#addressErrorMsg");
     const inputAddress = document.querySelector("#address");
     const regexAddress = new RegExp(
       /^\d{1,3}( bis| ter| quater)? (rue|avenue|boulevard|route|chemin|impasse) [a-zA-ZÀ-ÿ]+$/i
     );
-    //  console.log("afficher regexAddress");
+
     if (regexAddress.test(address)) {
       addressError.innerHTML = "";
       inputAddress.style.border = "2px solid green";
@@ -237,7 +234,6 @@ btnCommander.addEventListener("click", (e) => {
   }
 
   function validationEmail() {
-    // console.log("entrer dans validationEmail");
     let email = infoData.email;
     const emailError = document.querySelector("#emailErrorMsg");
     const inputEmail = document.querySelector("#email");
