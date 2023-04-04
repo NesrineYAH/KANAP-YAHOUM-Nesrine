@@ -148,7 +148,7 @@ btnCommander.addEventListener("click", (e) => {
   const infoData = {
     firstName: document.querySelector("#firstName").value,
     lastName: document.querySelector("#lastName").value,
-    addresse: document.querySelector("#address").value,
+    address: document.querySelector("#address").value,
     city: document.querySelector("#city").value,
     email: document.querySelector("#email").value,
   };
@@ -194,7 +194,7 @@ btnCommander.addEventListener("click", (e) => {
   }
 
   function validationAddress() {
-    let address = infoData.addresse;
+    let address = infoData.address;
     const addressError = document.querySelector("#addressErrorMsg");
     const inputAddress = document.querySelector("#address");
     const regexAddress = new RegExp(
@@ -227,7 +227,7 @@ btnCommander.addEventListener("click", (e) => {
       return true;
     } else {
       cityErrorMsg.innerHTML =
-        "Erreur de votre ville, la ville ne contient aucun chiffre";
+        "Erreur veuillez remplir votre ville correctement";
       inputCity.style.border = "2px solid red";
       return false;
     }
@@ -280,12 +280,17 @@ btnCommander.addEventListener("click", (e) => {
   // Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST :
 
   let orderId = "";
+  // création d'une fonction pour envoyer à l'API l'objet data et récupérer l'id de commande
   function sendFromToServer() {
     let lesProduits = itemsMyCart.map((i) => i.id);
+    const data = {
+      contact: infoData,
+      products: lesProduits,
+    };
     console.log(lesProduits.lentgh);
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
-      body: JSON.stringify(infoData),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
