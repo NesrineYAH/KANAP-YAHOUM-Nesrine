@@ -2,9 +2,7 @@
 //déclare une variable valant l'url de la page actuelle
 
 let url = new URLSearchParams(document.location.search);
-let id = url.get("id");
-
-const orderId = id;
+const orderId = url.get("id");
 
 //Affichage de l'id du produit :
 

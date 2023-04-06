@@ -153,7 +153,8 @@ btnCommander.addEventListener("click", (e) => {
     email: document.querySelector("#email").value,
   };
   console.log(infoData);
-  console.log("entrer dans validationFirstName");
+
+  // Créer une fonction pour valider le champ Prénom
   function validationFirstName() {
     let firstName = infoData.firstName;
     const firstNameError = document.querySelector("#firstNameErrorMsg");
@@ -173,6 +174,8 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
+  // Créer une fonction pour valider le champ Nom
+
   function validationLastName() {
     let lastName = infoData.lastName;
     const lastNameError = document.querySelector("#lastNameErrorMsg");
@@ -192,7 +195,7 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
-
+  // Créer une fonction pour valider le champ Addresse
   function validationAddress() {
     let address = infoData.address;
     const addressError = document.querySelector("#addressErrorMsg");
@@ -212,7 +215,7 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
-
+  // Créer une fonction pour valider le champ ville
   function validationVille() {
     let city = infoData.city;
     const cityErrorMsg = document.querySelector("#cityErrorMsg");
@@ -232,7 +235,7 @@ btnCommander.addEventListener("click", (e) => {
       return false;
     }
   }
-
+  // Créer une fonction pour valider le champ Email
   function validationEmail() {
     let email = infoData.email;
     const emailError = document.querySelector("#emailErrorMsg");
@@ -288,29 +291,29 @@ btnCommander.addEventListener("click", (e) => {
       products: lesProduits,
     };
     console.log(lesProduits.lentgh);
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      // Ensuite on stock la réponse de l'api (orderId) :
-      .then((response) => {
-        return response.json();
+    if (lesProduits.length > 0) {
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
+        // Ensuite on stock la réponse de l'api (orderId) :
+        .then((response) => {
+          return response.json();
+        })
 
-      .then((server) => {
-        if (lesProduits.length > 0) {
+        .then((server) => {
           orderId = server.orderId;
           // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable :
           if (orderId != "") {
             alert("✅ Votre commande à bient était prise en compte ✅");
             location.href = "confirmation.html?id=" + orderId;
           }
-        } else {
-          alert("Votre est panier est vide");
-        }
-      });
+        });
+    } else {
+      alert("Votre est panier est vide");
+    }
   }
 });
