@@ -47,6 +47,10 @@ const addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", () => {
   let quantite = document.querySelector("#quantity").value;
   console.log("ma quantite", quantite);
+  if (!Number.isInteger(parseFloat(quantite))) {
+    alert("nombre a virgule interdit");
+    return;
+  }
 
   let couleur = document.querySelector("#colors").value;
   console.log("ma couleur", couleur);
