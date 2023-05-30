@@ -129,6 +129,9 @@ function setupQuantity() {
         alert("Non pas plus de 100");
       } else if (newQuantity <= 0) {
         alert("Mettre article plus de 0");
+      } else if (!Number.isInteger(parseFloat(newQuantity))) {
+        alert("nombre a virgule interdit");
+        return;
       } else {
         let quantiteFinal = itemsMyCart.find(
           (p) => p.newQuantity !== oldQuantity
