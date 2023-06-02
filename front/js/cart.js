@@ -17,7 +17,6 @@ function getmyCart() {
 }
 
 let itemsMyCart = getmyCart();
-console.log("liste des articles dans mon panier", itemsMyCart);
 
 //* FETCH | Récupération et Transmission des données de l'API
 for (let item of itemsMyCart) {
@@ -63,7 +62,6 @@ for (let item of itemsMyCart) {
 for (let item of itemsMyCart) {
   totalQuantiteCartTotal += Number(item.quantite);
 }
-console.log("le nombre total de mon panier:", totalQuantiteCartTotal);
 totalQuantity.textContent = totalQuantiteCartTotal;
 
 //créer une fonction pour supprimer des articles dans le panier
@@ -85,8 +83,6 @@ function removeProduct(deleteId, deleteColor, element, price) {
 
   let articleCart = myCart[index];
 
-  console.log(articleCart.quantite);
-
   //update le prix total
   totalPriceCartTotal =
     totalPriceCartTotal - parseInt(articleCart.quantite) * price;
@@ -105,7 +101,6 @@ function removeProduct(deleteId, deleteColor, element, price) {
 
   // Affiche un message d'information de la suppression du produit
   alert("Vous allez retirer cet article de votre panier !");
-  console.log("articleCart supprime");
   // Affiche un message de confirmation de la suppression du produit
   alert("votre article a bien été supprimé de votre panier");
 }
@@ -114,17 +109,14 @@ function removeProduct(deleteId, deleteColor, element, price) {
 
 function setupQuantity() {
   let itemsMyCart = getmyCart();
-  console.log("entrer dans SetupOuantity", itemsMyCart);
   let inputQuantiteModifie = document.querySelectorAll(".itemQuantity");
-  console.log("entrer dans SetupOuantity", inputQuantiteModifie);
+
   for (let i = 0; i < inputQuantiteModifie.length; i++) {
-    console.log("entrer dans la boucle");
     inputQuantiteModifie[i].addEventListener("change", () => {
-      console.log("entrer dans addEvent");
       let oldQuantity = itemsMyCart[i].quantite;
-      console.log("entrer dans SetupOuantity", oldQuantity);
+
       let newQuantity = inputQuantiteModifie[i].value;
-      console.log("entrer dans SetupOuantity", newQuantity);
+
       if (newQuantity > 100) {
         alert("Non pas plus de 100");
       } else if (newQuantity <= 0) {
@@ -155,7 +147,6 @@ btnCommander.addEventListener("click", (e) => {
     city: document.querySelector("#city").value,
     email: document.querySelector("#email").value,
   };
-  console.log(infoData);
 
   // Créer une fonction pour valider le champ Prénom
   function validationFirstName() {
@@ -293,7 +284,7 @@ btnCommander.addEventListener("click", (e) => {
       contact: infoData,
       products: lesProduits,
     };
-    console.log(lesProduits.lentgh);
+
     if (lesProduits.length > 0) {
       fetch("http://localhost:3000/api/products/order", {
         method: "POST",

@@ -4,7 +4,7 @@
 let url = new URLSearchParams(document.location.search);
 const orderId = url.get("id");
 
-//Affichage de l'id du produit :
+//Affichage de l'id du commande :
 
 const idConfirmation = document.querySelector("#orderId");
 
